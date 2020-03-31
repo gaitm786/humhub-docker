@@ -150,6 +150,11 @@ RUN mkdir -p /usr/src/humhub/protected/config/ && \
     cp -R /var/www/localhost/htdocs/protected/config/* /usr/src/humhub/protected/config/ && \
     echo "v${HUMHUB_VERSION}" >  /usr/src/humhub/.version
 
+# install FlatHub theme
+RUN cd /var/www/localhost/htdocs/themes \
+    && wget https://github.com/sashatravkina/humhub-themes-flathub-v2/archive/master.zip \
+    && mv humhub-themes-flathub-v2-master FlatHub
+
 COPY etc/ /etc/
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
