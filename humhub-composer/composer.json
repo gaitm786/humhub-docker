@@ -1,0 +1,5 @@
+{
+    "autoload": {
+        "classmap": ["/var/www/localhost/htdocs/protected/modules/"]
+    }
+}

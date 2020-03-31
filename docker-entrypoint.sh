@@ -112,6 +112,9 @@ else
 	echo "debug enabled"
 fi
 
+echo "Flushing cache ..."
+php ./yii cache/flush-all
+
 if [[ "$INTEGRITY_CHECK" != "false" ]]; then
 	echo "validating ..."
 	php ./yii integrity/run
