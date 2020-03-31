@@ -1,18 +1,17 @@
-sudo: required
-
-language: php
-
+language: python
+if: branch = master or tag IS present
+python: 3.6
 services:
-  - docker
+    - docker
 
 before_script:
-  # dependencies
-  - pip install j2cli requests
-  - wget https://github.com/riotkit-org/ci-utils/archive/v2.1.0.zip -O /tmp/ci-utils.zip
-  - curl "https://raw.githubusercontent.com/riotkit-org/ci-utils/master/ci-integration/travis.sh" -s | bash
+    # dependencies
+    - pip install j2cli requests
+    - wget https://github.com/riotkit-org/ci-utils/archive/v1.2.3.zip -O /tmp/ci-utils.zip
+    - curl "https://raw.githubusercontent.com/riotkit-org/ci-utils/master/ci-integration/travis.sh" -s | bash
 
-  # authorization
-  - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
+    # authorization
+    - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
-  - make ci@all COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE" GIT_TAG="${TRAVIS_TAG}"
+    - make ci@all COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE" GIT_TAG="${TRAVIS_TAG}"
