@@ -43,7 +43,7 @@ ci@all: _download_tools ## CI task to build everythinh (GIT_TAG, COMMIT_MESSAGE)
 	fi; \
 	set -x; \
 	./.helpers/for-each-github-release \
-		--exec "make build  VERSION=%MATCH_0% PRECISE_DOCKER_TAG=$${RELEASE_TAG_TEMPLATE}" \
+		--exec "make build push VERSION=%MATCH_0% PRECISE_DOCKER_TAG=$${RELEASE_TAG_TEMPLATE}" \
 		--repo-name humhub/humhub \
 		--dest-docker-repo ${IMAGE} \
 		$${BUILD_PARAMS}\
