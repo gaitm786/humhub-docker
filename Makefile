@@ -27,7 +27,7 @@ build: ## Build image (VERSION, PRECISE_DOCKER_TAG)
 
 push: ## Release image to the registry (VERSION, PRECISE_DOCKER_TAG)
 	set -x; ${SUDO} docker push ${IMAGE}:${VERSION}${VERSION}
-	set -x; ${SUDO} docker push ${IMAGE}:${VERSION}${PRECISE_DOCKER_TAG}
+	set -x; ${SUDO} docker push ${IMAGE}:${PRECISE_DOCKER_TAG}
 
 #
 # For each release on github.com/humhub/humhub build an image
