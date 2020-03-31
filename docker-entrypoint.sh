@@ -26,13 +26,17 @@ wait_for_db() {
 	done
 }
 
+setup_autoloading() {
+    echo " >> Regenerating autoload"
+    su nginx -s /bin/sh -c "cd /var/www/localhost/humhub-composer/ && composer dump-autoload -o"
+}
+
 echo "=="
 
 #
 # Regenerate autoload in case of adding new modules
 #
-echo " >> Regenerating autoload"
-su nginx -s /bin/sh -c "cd /var/www/localhost/htdocs && composer dump-autoload -o"
+setup_autoloading
 
 if [[ -f "/var/www/localhost/htdocs/protected/config/dynamic.php" ]]; then
 	echo "Existing installation found!"

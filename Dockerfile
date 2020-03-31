@@ -146,7 +146,7 @@ RUN chown -R nginx:nginx /var/lib/nginx/ && \
 
 COPY --from=builder --chown=nginx:nginx /usr/src/humhub /var/www/localhost/htdocs/
 COPY --chown=nginx:nginx humhub/ /var/www/localhost/htdocs/
-COPY --chown=nginx:nginx humhub-composer/ /var/www/localhost/
+COPY --chown=nginx:nginx humhub-composer /var/www/localhost/
 
 RUN mkdir -p /usr/src/humhub/protected/config/ && \
     cp -R /var/www/localhost/htdocs/protected/config/* /usr/src/humhub/protected/config/ && \
@@ -156,7 +156,8 @@ RUN mkdir -p /usr/src/humhub/protected/config/ && \
 RUN cd /var/www/localhost/htdocs/themes \
     && wget https://github.com/sashatravkina/humhub-themes-flathub-v2/archive/master.zip \
     && unzip master.zip \
-    && mv humhub-themes-flathub-v2-master FlatHub
+    && mv humhub-themes-flathub-v2-master FlatHub \
+    && rm master.zip
 
 COPY etc/ /etc/
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
