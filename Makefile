@@ -32,7 +32,7 @@ push: ## Release image to the registry (VERSION, PRECISE_DOCKER_TAG)
 #
 # For each release on github.com/humhub/humhub build an image
 #
-ci@all:## CI task to build everythinh (GIT_TAG, COMMIT_MESSAGE)
+ci@all: _download_tools ## CI task to build everythinh (GIT_TAG, COMMIT_MESSAGE)
 	BUILD_PARAMS="--dont-rebuild "; \
 	RELEASE_TAG_TEMPLATE="%MATCH_0%"; \
 	if [[ "$$COMMIT_MESSAGE" == *"@force-rebuild"* ]] || [[ "${GIT_TAG}" != "" ]]; then \
