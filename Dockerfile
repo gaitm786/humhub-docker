@@ -109,6 +109,7 @@ RUN apk add --no-cache \
     sqlite \
     bash \
     nano \
+    unzip \
     && rm -rf /var/cache/apk/*
 
 RUN BUILD_DEPS="gettext"  \
