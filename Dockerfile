@@ -153,6 +153,7 @@ RUN mkdir -p /usr/src/humhub/protected/config/ && \
 # install FlatHub theme
 RUN cd /var/www/localhost/htdocs/themes \
     && wget https://github.com/sashatravkina/humhub-themes-flathub-v2/archive/master.zip \
+    && unzip master.zip \
     && mv humhub-themes-flathub-v2-master FlatHub
 
 COPY etc/ /etc/
