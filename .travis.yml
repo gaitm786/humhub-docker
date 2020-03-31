@@ -5,11 +5,14 @@ language: php
 services:
   - docker
 
-before_install:
-  - docker-compose build
-  - docker-compose up -d
-  - sleep 60
-  - docker ps -a
+before_script:
+  # dependencies
+  - pip install j2cli requests
+  - wget https://github.com/riotkit-org/ci-utils/archive/v2.1.0.zip -O /tmp/ci-utils.zip
+  - curl "https://raw.githubusercontent.com/riotkit-org/ci-utils/master/ci-integration/travis.sh" -s | bash
+
+  # authorization
+  - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
-  - curl http://localhost:8080/ -L --fail -s | grep 'Sign in</button>' -q
+  - make ci@all COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE" GIT_TAG="${TRAVIS_TAG}"

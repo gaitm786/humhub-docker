@@ -1,7 +1,13 @@
 ARG HUMHUB_VERSION=1.4.4
 
+#
+# Composer temporary image
+#
 FROM composer:1.10.1 as builder-composer
 
+#
+# Building temporary image
+#
 FROM alpine:3.11.5 as builder
 
 ARG HUMHUB_VERSION
@@ -59,9 +65,16 @@ RUN grunt build-assets
 
 RUN rm -rf ./node_modules
 
+
+#
+# Destination image
+#
 FROM alpine:3.11.5
 
 ARG HUMHUB_VERSION
+
+COPY --from=builder-composer /usr/bin/composer /usr/bin/composer
+RUN chmod +x /usr/bin/composer
 
 RUN apk add --no-cache \
     curl \
@@ -94,6 +107,8 @@ RUN apk add --no-cache \
     supervisor \
     nginx \
     sqlite \
+    bash \
+    nano \
     && rm -rf /var/cache/apk/*
 
 RUN BUILD_DEPS="gettext"  \
@@ -104,10 +119,25 @@ RUN BUILD_DEPS="gettext"  \
     cp /usr/bin/envsubst /usr/local/bin/envsubst && \
     apk del build_deps
 
-ENV PHP_POST_MAX_SIZE=16M
-ENV PHP_UPLOAD_MAX_FILESIZE=10M
-ENV PHP_MAX_EXECUTION_TIME=60
-ENV PHP_MEMORY_LIMIT=1G
+ENV PHP_POST_MAX_SIZE=32M \
+    PHP_UPLOAD_MAX_FILESIZE=26M \
+    PHP_MAX_EXECUTION_TIME=60 \
+    PHP_MEMORY_LIMIT=1G \
+    # Runs integrity check at startup (BE CAREFUL! Especially when switching modules. Always make a backup.)
+    INTEGRITY_CHECK=1 \
+    # Wait for MySQL to get up
+    WAIT_FOR_DB=1 \
+    # Set up ajax
+    SET_PJAX=1 \
+    AUTOINSTALL=false \
+    HUMHUB_DB_NAME=humhub \
+    HUMHUB_DB_HOST=db \
+    HUMHUB_DB_PASSWORD="solidarity-mutual-aid" \
+    HUMHUB_DB_USER="my-grassroot-social-media" \
+    HUMHUB_NAME="RiotKit HumHub" \
+    HUMHUB_EMAIL=humhub@example.com \
+    HUMHUB_LANG=en-US \
+    HUMHUB_DEBUG=false
 
 RUN chown -R nginx:nginx /var/lib/nginx/ && \
     touch /var/run/supervisor.sock && \

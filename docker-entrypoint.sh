@@ -15,7 +15,7 @@ HUMHUB_DEBUG=${HUMHUB_DEBUG:-"false"}
 export NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-10m}
 
 wait_for_db() {
-	if [ "$WAIT_FOR_DB" == "false" ]; then
+	if [[ "$WAIT_FOR_DB" == "false" ]]; then
 		return 0
 	fi
 
@@ -27,7 +27,14 @@ wait_for_db() {
 }
 
 echo "=="
-if [ -f "/var/www/localhost/htdocs/protected/config/dynamic.php" ]; then
+
+#
+# Regenerate autoload in case of adding new modules
+#
+echo " >> Regenerating autoload"
+su nginx -s /bin/sh -c "cd /var/www/localhost/htdocs && composer dump-autoload -o"
+
+if [[ -f "/var/www/localhost/htdocs/protected/config/dynamic.php" ]]; then
 	echo "Existing installation found!"
 
 	wait_for_db
@@ -60,17 +67,17 @@ else
 
 	echo "Creating database..."
 	cd /var/www/localhost/htdocs/protected/
-	if [ -z "$HUMHUB_DB_USER" ]; then
+	if [[ -z "$HUMHUB_DB_USER" ]]; then
 		AUTOINSTALL="false"
 	fi
 
-	if [ "$AUTOINSTALL" != "false" ]; then
+	if [[ "$AUTOINSTALL" != "false" ]]; then
 		echo "Installing..."
 		php yii installer/write-db-config "$HUMHUB_DB_HOST" "$HUMHUB_DB_NAME" "$HUMHUB_DB_USER" "$HUMHUB_DB_PASSWORD"
 		php yii installer/install-db
 		php yii installer/write-site-config "$HUMHUB_NAME" "$HUMHUB_EMAIL"
 		# Set baseUrl if provided
-		if [ -n "$HUMHUB_PROTO" ] && [ -n "$HUMHUB_HOST" ]; then
+		if [[ -n "$HUMHUB_PROTO" ]] && [[ -n "$HUMHUB_HOST" ]]; then
 			HUMHUB_BASE_URL="${HUMHUB_PROTO}://${HUMHUB_HOST}${HUMHUB_SUB_DIR}/"
 			echo "Setting base url to: $HUMHUB_BASE_URL"
 			php yii installer/set-base-url "${HUMHUB_BASE_URL}"
@@ -87,7 +94,7 @@ if test -e /var/www/localhost/htdocs/protected/config/dynamic.php &&
 	grep "'installed' => true" /var/www/localhost/htdocs/protected/config/dynamic.php -q; then
 	echo "installation active"
 
-	if [ $SET_PJAX != "false" ]; then
+	if [[ $SET_PJAX != "false" ]]; then
 		sed -i -e "s/'enablePjax' => false/'enablePjax' => true/g" /var/www/localhost/htdocs/protected/config/common.php
 	fi
 else
@@ -95,7 +102,7 @@ else
 	INTEGRITY_CHECK="false"
 fi
 
-if [ "$HUMHUB_DEBUG" == "false" ]; then
+if [[ "$HUMHUB_DEBUG" == "false" ]]; then
 	sed -i '/YII_DEBUG/s/^\/*/\/\//' /var/www/localhost/htdocs/index.php
 	sed -i '/YII_ENV/s/^\/*/\/\//' /var/www/localhost/htdocs/index.php
 	echo "debug disabled"
@@ -105,10 +112,10 @@ else
 	echo "debug enabled"
 fi
 
-if [ "$INTEGRITY_CHECK" != "false" ]; then
+if [[ "$INTEGRITY_CHECK" != "false" ]]; then
 	echo "validating ..."
 	php ./yii integrity/run
-	if [ $? -ne 0 ]; then
+	if [[ $? -ne 0 ]]; then
 		echo "validation failed!"
 		exit 1
 	fi

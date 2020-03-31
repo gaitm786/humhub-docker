@@ -5,7 +5,7 @@
 version: '3.1'
 services:
   humhub:
-    build: .
+    build: ..
     ports:
       - "8080:80"
     environment:
@@ -24,15 +24,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  db:
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MYSQL_DATABASE: 'humhub'
-      MYSQL_USER: ${HUMHUB_DB_USER}
-      MYSQL_PASSWORD: ${HUMHUB_DB_PASSWORD}
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+#  db:
+#    image: mariadb
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+#      MYSQL_DATABASE: 'humhub'
+#      MYSQL_USER: ${HUMHUB_DB_USER}
+#      MYSQL_PASSWORD: ${HUMHUB_DB_PASSWORD}
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "--silent"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
