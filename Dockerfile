@@ -146,7 +146,7 @@ RUN chown -R nginx:nginx /var/lib/nginx/ && \
 
 COPY --from=builder --chown=nginx:nginx /usr/src/humhub /var/www/localhost/htdocs/
 COPY --chown=nginx:nginx humhub/ /var/www/localhost/htdocs/
-COPY --chown=nginx:nginx humhub-composer /var/www/localhost/
+COPY --chown=nginx:nginx humhub-composer /var/www/localhost/humhub-composer
 
 RUN mkdir -p /usr/src/humhub/protected/config/ && \
     cp -R /var/www/localhost/htdocs/protected/config/* /usr/src/humhub/protected/config/ && \
